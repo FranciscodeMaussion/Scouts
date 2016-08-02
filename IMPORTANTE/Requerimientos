@@ -1,0 +1,35 @@
+
+Requerimientos para Trabajo Practico del Grupo de Scout.
+
+matias stumpf
+matias.stumpf@gmail.com
+
+martinpaez
+mpcba53@gmail.com
+
+Probando
+
+//Caja chica efectivo/Banco=Todo lo depositado//
+
+Registros de ingresos y egresos. Presupuestos campa(verano e invierno ) y eventos.
+Legajos: info de los chicos.
+Usan Excel ahora. Banco y caja chica.
+
+El grupo general se subdivide en grupos etarios.
+Falta info DE LOS CHICOS, falta un seguimiento de las cuentas. Datos personales progresion. TODO ESTANDARIZANDO.
+Hay sistema web para proceso afiliatorio.
+Plataforma: Solo PC. Seria bueno celular.
+Tiene que ser online.
+Tiene que imprimir presupuestos y balances. En planilla excel.
+Niveles de permiso/Tipos de usuario.
+Ver archivos planillas, modificar, etc.
+Grupo con muchos usuario.
+Un usuario puede ver solo SU grupo.
+Nombre Apellido - DNI - BORN - tel - direccion - TUTORES NOMBRES  - Foto - mail - Seccion en la que esta ( tildes)
+Poder llenar Formulario para Permisos de Campamentos.
+NIVELES DE PODER:
+    -TOTAL
+    -SOLO ADMINISTRATIVO CARGAR COSAS PLATA ETC.
+    -Chicos(carga de datos,etc)
+
+nomica de acampe, por seccion, adultos, cuentas corrientes por seccion.

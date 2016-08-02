@@ -1,0 +1,6 @@
+db.sqlite3
+*.pyc
+inscription/migrations/*
+administrator/migrations/*
+guest/migrations/*
+accounts/migrations/*

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+{{afiliado.nombre}}
+{% endblock %}
+{% block content %}
+<section class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="col-md-6">
+                <h4>Nombre:</h4>
+                <input type="text" class="form-control" value="{{afiliado.name}} {{afiliado.lastname}}" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '{{afiliado.name}} {{afiliado.lastname}}'}" >
+            </div>
+            <div class="col-md-6">
+                <h4>DNI:</h4>
+                <input type="text" class="form-control" value="{{afiliado.dni}}" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '{{afiliado.dni}}'}" >
+            </div>
+            <div class="col-md-6">
+                <h4>Fecha de Nacimiento:</h4>
+                <input type="text" class="form-control" value="{{afiliado.birthday}}" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '{{afiliado.birthday}}'}" >
+            </div>
+            <div class="col-md-6">
+                <h4>Email:</h4>
+                <input type="text" class="form-control" value="{{afiliado.email}}" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '{{afiliado.email}}'}" >
+            </div>
+        </div>
+        <div class="col-md-4 media-middle">
+            {% if afiliado.scout %}
+            <img class="media-object" src="/{{afiliado.pic}}">
+            {% else %}
+            <h4>Formacion:</h4>
+                <h5>{{afiliado.formation}}</h5>
+            {% endif %}
+        </div>
+    </div>
+    {% if afiliado.scout %}
+    <hr>
+    <div class="row container-fluid">
+        <div class="col-md-4">
+            <h4>Tutor:</h4>
+            <input type="text" class="form-control col-md-5" value="{{afiliado.tutor}}" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = '{{afiliado.tutor}}'}" >
+        </div>
+        <div class="col-md-4">
+            <h4>Seccion:</h4>
+            <input value="{{afiliado.section}}">
+        </div>
+        <div class="col-md-4">
+            <h4>Etapa: </h4>
+            <input value="{{afiliado.stage}}">
+        </div>
+    </div>
+    {% endif %}
+    <hr>
+    <div class="row container-fluid">
+        <h2>Cuenta Personal:</h2>
+        <div class="col-md-4">
+            <h4>Inicio el:</h4>
+            <h5>{{afiliado.account.start}}</h5>
+        </div>
+        <div class="col-md-4">
+            <h4>Saldo:</h4>
+            <h5>{{afiliado.account.wallet}}</h5>
+        </div>
+        <div class="col-md-4">
+            <h4>Estado de la inscripcion:</h4>
+            <h5>{% if afiliado.account.inscription %}Pagada{% else %}No esta pagada.{% endif %}</h5>
+        </div>
+    </div>
+</section>
+{% endblock %}

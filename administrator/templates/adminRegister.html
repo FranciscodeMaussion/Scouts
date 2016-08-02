@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+  Registro
+{% endblock %}
+{% block content %}
+<div class="top-content">
+  <div class="inner-bg">
+    <div class="container">
+      <div class="row" style="margin-top:80;">
+        <div class="col-sm-6 col-sm-offset-3">
+          <div class="form-box">
+            <div class="form-top">
+              <div class="form-top-left">
+                <h3>Registra un nuevo usuario</h3>
+              </div>
+            </div>
+            <div class="form-bottom">
+              <form role="form" action="{% url 'administrator:register' %}" method="post" class="registration-form">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="sr-only" for="username">Username</label>
+                  <input type="text" name="username" placeholder="Username" class="form-first-name form-control" id="form-first-name">
+                </div>
+                <div class="form-group">
+                  <label class="sr-only" for="password">Password</label>
+                  <input type="password" name="password" placeholder="Password" class="form-last-name form-control" id="form-last-name">
+                </div>
+                <!--<select name="rolselect">
+                <option value="SUPERUSER">Master</option>
+                <option value="ABM">Administrador</option>
+                <option value="ACCOUNT">Contador</option>
+                </select>!-->
+                <a class="btn btn-default btn-select btn-select-light">
+                  <input type="hidden" class="btn-select-input" id="rolselect" name="rolselect" value="" />
+                  <span class="btn-select-value">Seleccione a que cuenta</span>
+                  <span class='btn-select-arrow glyphicon glyphicon-chevron-down'></span>
+                  <ul>
+                    <li value="SUPERUSER">Master</li>
+                    <li value="ABM">Administrador</li>
+                    <li value="ACCOUNT">Contador</li>
+                  </ul>
+                </a>
+
+                <button type="submit" class="btn">Sign me up!</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

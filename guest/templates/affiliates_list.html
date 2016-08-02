@@ -1,0 +1,50 @@
+<!--
+Tabla con Todos los nombres, rol (adulto o beneficiario),
+-->
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+Afiliados
+{% endblock %}
+{% block content %}
+<header>
+    <div class="container">
+        <div class="intro-text">
+            <div class="intro-heading">Afiliados</div>
+            <a href="#lista" class="page-scroll btn btn-xl" style="background-color:transparent; border-color:white;">Ver</a>
+        </div>
+    </div>
+</header>
+
+<section id="lista">
+    <div class="container-fluid table-responsive">
+        <table class="table table-hover">
+            <thead class="thead">
+                <tr>
+                    <th>Nombre</th>
+                    <th>DNI</th>
+                    <th>Tipo de Afiliado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in afiliados %}
+                <tr>
+                    <td>{{a.name}} {{a.lastname}}</td>
+                    <td>{{a.dni}}</td>
+                    <td>{% if a.scout %}Scout{% else %}Adulto{% endif %} <a href="
+                      {% if request.user.is_authenticated %}
+                        {% if request.user.myuser.rol == 'ABM' %}
+                          {% url 'administrator:profile' a.dni %}
+                        {% else %}
+                          {% url 'guest:profile' a.dni %}
+                        {% endif %}
+                      {% else %}
+                        {% url 'guest:profile' a.dni %}
+                      {% endif %}"><span class="glyphicon glyphicon-eye-open" style="float:right;"></span></a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

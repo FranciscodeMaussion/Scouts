@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+Presupuesto
+{% endblock %}
+{% block content %}
+<section id="presupuesto">
+<div class="col-md-8 col-md-offset-2">
+  <form>
+  <fieldset class="form-comtrol">
+    <label for="formGroupExampleInput"></label>
+    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Nombre" name="name">
+  </fieldset>
+    <fieldset class="form-group">
+      <label for="exampleTextarea"></label>
+      <textarea class="form-control" id="exampleTextarea" rows="3" placeholder="Descripcion" name="description"></textarea>
+    </fieldset>
+    <!--<fieldset class="form-group">
+      <label for="exampleInputFile"></label>
+      <input type="file" class="form-control-file" id="exampleInputFile">
+    </fieldset> -->
+    <a class="btn btn-default btn-select btn-select-light">
+        <input type="hidden" class="btn-select-input" id="" name="" value="" />
+        <span class="btn-select-value">Seleccione un evento</span>
+        <span class='btn-select-arrow glyphicon glyphicon-chevron-down'></span>
+        <ul>
+          {% for event in events %}
+            <li>{{event.name}}</li>
+          {% endfor %}
+        </ul>
+    </a>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+</div>
+</section>
+{% endblock %}

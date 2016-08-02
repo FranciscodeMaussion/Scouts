@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+<div class="top-content">
+    <div class="inner-bg">
+        <div class="container">
+            <div class="row" style="margin-top:80;">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="form-box">
+                        <div class="form-top">
+                            <br>
+                            <br>
+                            <form action="{% url 'inscription:addAfiliado' %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <label for="{% url 'inscription:addAfiliado' %}"> Adulto: </label>
+                                {{ form.scout }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Name: </label>
+                                {{ form.name }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Apellido: </label>
+                                {{ form.lastname }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Sexo: </label>
+                                {{ form.sex }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Dni: </label>
+                                {{ form.dni }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Nacimiento: </label>
+                                {{ form.birthday }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Telefono: </label>
+                                {{ form.phone }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Direccion: </label>
+                                {{ form.adress }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Tutor: </label>
+                                {{ form.tutor }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Etapa: </label>
+                                {{ form.section }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Rango: </label>
+                                {{ form.stage }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Pic: </label>
+                                {{ form.pic }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Email: </label>
+                                {{ form.email }}
+                                <br><label for="{% url 'inscription:addAfiliado' %}"> Formacion: </label>
+                                {{ form.formation }}
+                            <br><input type="submit" value="OK">
+                            </form>
+                            <!--<br>
+                            Adulto:
+                            <input type="checkbox" id="scout" name="scout" ><br>
+                            Nombre:
+                            <input name="nombre" type="text" style="color:black" id="name" name="name" required data-validation-required-message="Please enter name."><br>
+                            Apellido:
+                            <input name="nombre" type="text" style="color:black" id="last_name" name="last_name" required data-validation-required-message="Please enter last name."><br>
+                            Dni:
+                            <input name="nombre" type="text" style="color:black" id="dni" name="dni" required data-validation-required-message="Please enter dni."><br>
+                            Nacimiento:
+                            <input name="nombre" type="text" style="color:black" id="birthday" name="birthday" required data-validation-required-message="Please enter birthday."><br>
+                            Tel
+                            <input name="nombre" type="text" style="color:black" id="phone" name="phone" required data-validation-required-message="Please enter phone."><br>
+                            Direccion:
+                            <input name="nombre" type="text" style="color:black" id="adress" name="adress" required data-validation-required-message="Please enter adress."><br>
+                            Tutor:
+                            <input name="nombre" type="text" style="color:black" id="tutor" name="tutor" required data-validation-required-message="Please enter tutor."><br>
+                            Foto:
+                            <input id="pic" name="pic" type="file" onchange="previewImg()"><br>
+
+                            <img src="" height="200" alt="Image preview...">
+                            Email:
+                            <input name="email" type="text" style="color:black" id="email" required data-validation-required-message="Please enter email."><br>
+                            Formacion:
+                            <input name="formation" type="text" style="color:black" id="formation" required data-validation-required-message="Please enter formation."><br>
+                            <div>
+                                <select id = "section" name="section">
+                                    {% for section in section %}
+                                        <option value="{{section.name}}">{{section.name}}</option>
+                                    {% endfor %}
+                                </select><br>
+                                <select id = "stage" name="stage">
+                                    {% for stage in stage %}
+                                        <option value="{{stage.name}}">{{stage.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="submit" id="btn_cargar" name="btn_cargar"> Add Member </input>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+//$('#id_{{ form.formation }}').hide()
+/*$('#scout').click(function() {
+    var $this = $(this);
+    if ($this.is(':checked')) {
+        $('#formation').show()
+        $('#section').hide()
+        $('#stage').hide()
+        $('#pic').hide()
+        $('#tutor').hide()
+    } else {
+        $('#formation').hide()
+        $('#section').show()
+        $('#stage').show()
+        $('#pic').show()
+        $('#tutor').show()
+    }
+});
+$("#btn_cargar").click(function(){
+    var data={
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        scout:$('#scout').is(':checked'),
+        name:$('#name').val(),
+        last_name:$('#last_name').val(),
+        dni:$('#dni').val(),
+        birthday:$('#birthday').val(),
+        phone:$('#phone').val(),
+        adress:$('#adress').val(),
+        tutor:$('#tutor').val(),
+        section:$('#section').val(),
+        stage:$('#stage').val(),
+        pic:$('#pic').val(),
+        email:$('#email').val(),
+        formation:$('#formation').val(),
+
+    }
+    $.ajax({
+        type: "POST",
+        url: "{% url 'inscription:addAfiliado' %}",
+        data: data,
+        success: function(result){
+            console.log("Working");
+            $('#name').val("");
+            $('#last_name').val("");
+            $('#dni').val("");
+            $('#brithday').val("");
+            $('#phone').val("");
+            $('#adress').val("");
+            $('#tutor').val("");
+            $('#pic').val("");
+            $('#email').val("");
+            $('#formation').val("");
+        },
+        error: function(err){
+            console.log("ERRRORRRR");
+            console.log(err.responseText);
+        },
+    });
+});
+function previewImg(){
+   var preview = document.querySelector('img'); //selects the query named img
+   var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+   var reader  = new FileReader();
+
+   reader.onloadend = function () {
+       preview.src = reader.result;
+   }
+
+   if (file) {
+       reader.readAsDataURL(file); //reads the data as a URL
+   } else {
+       preview.src = "";
+   }
+}
+
+previewImg();  //calls the function named previewFile()*/
+</script>
+{% endblock %}
