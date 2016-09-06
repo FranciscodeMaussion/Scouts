@@ -1,11 +1,11 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from guest import views
 
 urlpatterns = [
-    url(r'^$', views.inup, name='inup'),
-    url(r'^login/$', views.adminLogIn, name='login'),
-    url(r'^lista_afiliados/$', views.affiliatesList, name='affiliates'),
-    url(r'^perfil/(?P<afDni>[0-9]+)/$', views.profile, name='profile'),
-    url(r'^logout/$', views.adminLogOut, name='logout'),
-    url(r'^eventos/$', views.eventos, name='eventos'),
+    url(r'^$', views.view_index, name='inup'),
+    url(r'^login/$', views.login_for_the_admin, name='login'),
+    url(r'^lista_afiliados/$', views.affiliates_list, name='affiliates'),
+    url(r'^perfil/(?P<afDni>[0-9]+)/$', views.affiliate_profile, name='profile'),
+    url(r'^logout/$', views.log_out, name='logout'),
+    url(r'^eventos/$', views.view_events, name='eventos'),
 ]

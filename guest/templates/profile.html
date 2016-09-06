@@ -6,30 +6,27 @@
 {% block content %}
 <section class="container-fluid">
     <div class="row">
-        <div class="col-md-8">
-            <div class="col-md-6">
-                <h4>Nombre:</h4>
-                <h5>{{afiliado.name}} {{afiliado.lastname}}</h5>
-            </div>
-            <div class="col-md-6">
-                <h4>DNI:</h4>
-                <h5>{{afiliado.dni}}</h5>
-            </div>
-            <div class="col-md-6">
-                <h4>Fecha de Nacimiento:</h4>
-                <h5>{{afiliado.birthday}}</h5>
-            </div>
-            <div class="col-md-6">
-                <h4>Email:</h4>
-                <h5>{{afiliado.email}}</h5>
-            </div>
+        <div class="col-md-6">
+            <h4>Nombre: {{afiliado.name}} {{afiliado.lastname}}</h4>
+        </div>
+        <div class="col-md-6">
+            <h4>DNI:</h4>
+            <h5>{{afiliado.dni}}</h5>
+        </div>
+        <div class="col-md-6">
+            <h4>Fecha de Nacimiento:</h4>
+            <h5>{{afiliado.birthday}}</h5>
+        </div>
+        <div class="col-md-6">
+            <h4>Email:</h4>
+            <h5>{{afiliado.email}}</h5>
         </div>
         <div class="col-md-4 media-middle">
             {% if afiliado.scout %}
-            <img class="media-object" src="/{{afiliado.pic}}">
+            <img class="media-object" src="{{afiliado.scout.picture.url}}">
             {% else %}
             <h4>Formacion:</h4>
-                <h5>{{afiliado.formation}}</h5>
+                <h5>{{afiliado.adulto.formation}}</h5>
             {% endif %}
         </div>
     </div>
@@ -38,15 +35,15 @@
     <div class="row container-fluid">
         <div class="col-md-4">
             <h4>Tutor:</h4>
-            <h5>{{afiliado.tutor}}</h5>
+            <h5>{{afiliado.scout.tutor}}</h5>
         </div>
         <div class="col-md-4">
             <h4>Seccion:</h4>
-            <h5>{{afiliado.section}}</h5>
+            <h5>{{afiliado.scout.section.name}}</h5>
         </div>
         <div class="col-md-4">
             <h4>Etapa: </h4>
-            <h5>{{afiliado.stage}}</h5>
+            <h5>{{afiliado.scout.stage.name}}</h5>
         </div>
     </div>
     {% endif %}
@@ -54,12 +51,8 @@
     <div class="row container-fluid">
         <h2>Cuenta Personal:</h2>
         <div class="col-md-4">
-            <h4>Inicio el:</h4>
-            <h5>{{afiliado.account.start}}</h5>
-        </div>
-        <div class="col-md-4">
             <h4>Saldo:</h4>
-            <h5>${{afiliado.account.wallet}}</h5>
+            <h5>${{afiliado.scout.account.amount}}</h5>
         </div>
         <div class="col-md-4">
             <h4>Estado de la inscripcion:</h4>

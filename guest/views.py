@@ -7,69 +7,68 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 
-from inscription.models import Member
+from inscription.models import Affiliate
+from accounts.models import Event
 
 # Admin = django User. Scout leader:
 
-#Inicializacion
-
-def inup(request):
+#Inicializacio
+def view_index(request):
     context = RequestContext(request)
-    return render_to_response('index.html', context)
+    return render(request, 'index.html')
 
 # LogIn
-def adminLogIn(request):
+def login_for_the_admin(request):
     context = RequestContext(request)
     if request.method=='POST':
-        username=request.POST['username']
-        password=request.POST['password']
+        username = request.POST['username']
+        password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
             if user.is_active:
                 login(request, user)
                 return HttpResponse(status=200)
             else:
-                #return render_to_response('adminLogIn.html', context,status=201)
+                #return render(request, 'adminLogIn.html', context,status=201)
                 return HttpResponse(status=201)
         else:
-            #return render_to_response('adminLogIn.html', context,status=202)
+            #return render(request, 'adminLogIn.html', context,status=202)
             return HttpResponse(status=202)
-    return render_to_response('adminLogIn.html', context)
+    return render(request, 'adminLogIn.html')
 
 # LogOut
-def adminLogOut(request):
+def log_out(request):
     context = RequestContext(request)
     logout(request)
     return redirect('/')
 
 # Register
-def adminRegister(request):
+def register_for_the_admin(request):
     context = RequestContext(request)
     if request.method=='POST':
         username=request.POST['username']
         password=request.POST['password']
-        n_u=User()
-        n_u.username=username
-        n_u.set_password(password)
-        n_u.save()
-    return render_to_response('adminRegister.html',context)
-
-# Cierra Admin
+        new_user=User()
+        new_user.username=username
+        new_user.set_password(password)
+        new_user.save()
+    return render(request, 'adminRegister.html')
 
 # Lista de afiliados para mostrar tabla completa
-def affiliatesList(request):
+def affiliates_list(request):
     context = RequestContext(request)
-    affiliate = Member.objects.all()
-    return render_to_response('affiliates_list.html',{'afiliados':affiliate}, context)
+    affiliate = Affiliate.objects.all()
+    return render(request, 'affiliates_list.html',{'afiliados':affiliate})
 
-def profile(request,afDni):
+# Perfil de afiliados
+def affiliate_profile(request,afDni):
     context = RequestContext(request)
-    affiliate = Member.objects.get(dni=afDni)
-    return render_to_response('profile.html',{'afiliado':affiliate}, context)
+    affiliate = Affiliate.objects.get(dni=afDni)
+    return render(request, 'profile.html',{'afiliado':affiliate})
 
 
 #Template Eventos
-
-def eventos(request):
+def view_events(request):
     context = RequestContext(request)
-    return render_to_response('template_eventos.html', context)
+    event = Event.objects.all()
+    return render(request, 'template_eventos.html',{'events':event})

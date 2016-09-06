@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block title %}
-  Registro
+Registro
 {% endblock %}
 {% block content %}
 <div class="top-content">
@@ -19,30 +19,21 @@
               <form role="form" action="{% url 'administrator:register' %}" method="post" class="registration-form">
                 {% csrf_token %}
                 <div class="form-group">
-                  <label class="sr-only" for="username">Username</label>
+                  <select class="selectpicker" data-style="btn my-btn-gray" name="rolselect" data-width="100%">
+                    <option value="SUPERUSER">Master</option>
+                    <option value="ABM">Administrador</option>
+                    <option value="ACCOUNT">Contador</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="sr-only" for="username">Usuario</label>
                   <input type="text" name="username" placeholder="Username" class="form-first-name form-control" id="form-first-name">
                 </div>
                 <div class="form-group">
-                  <label class="sr-only" for="password">Password</label>
+                  <label class="sr-only" for="password">Contraseña</label>
                   <input type="password" name="password" placeholder="Password" class="form-last-name form-control" id="form-last-name">
                 </div>
-                <!--<select name="rolselect">
-                <option value="SUPERUSER">Master</option>
-                <option value="ABM">Administrador</option>
-                <option value="ACCOUNT">Contador</option>
-                </select>!-->
-                <a class="btn btn-default btn-select btn-select-light">
-                  <input type="hidden" class="btn-select-input" id="rolselect" name="rolselect" value="" />
-                  <span class="btn-select-value">Seleccione a que cuenta</span>
-                  <span class='btn-select-arrow glyphicon glyphicon-chevron-down'></span>
-                  <ul>
-                    <li value="SUPERUSER">Master</li>
-                    <li value="ABM">Administrador</li>
-                    <li value="ACCOUNT">Contador</li>
-                  </ul>
-                </a>
-
-                <button type="submit" class="btn">Sign me up!</button>
+                <button type="submit" class="btn my-btn-green">Registrar</button>
               </form>
             </div>
           </div>

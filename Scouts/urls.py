@@ -24,4 +24,4 @@ urlpatterns = [
     url(r'^', include('guest.urls', namespace = "guest")),
     url(r'^admin/', include('administrator.urls', namespace = "administrator")),
     url(r'^cuentas/', include('accounts.urls', namespace = "accounts")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,7 +6,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from administrator.models import MyUser
-from inscription.models import Member
+from inscription.models import Affiliate
+from accounts.models import Budget
 
 # Create your views here.
 user_types = (
@@ -15,35 +16,19 @@ user_types = (
     ("ACCOUNT", "Contador"),
 )
 
-#Template Administrador
-
-def templateAdmin(request):
-    context = RequestContext(request)
-    return render_to_response('templateAdmin.html', context)
-
-
 # Register
-def adminRegister(request):
+def admin_register(request):
     context = RequestContext(request)
-    if request.method=='POST':
-        username=request.POST['username']
-        password=request.POST['password']
-        n_u=User()
-        n_u.username=username
-        n_u.set_password(password)
-        n_u.save()
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        rol = request.POST['rolselect']
+        new_user=User()
+        new_user.username = username
+        new_user.set_password(password)
+        new_user.save()
         miuser = MyUser()
-        miuser.user=n_u
-        hola=request.POST['rolselect']
-        print hola
-        miuser.rol=hola
+        miuser.user = new_user
+        miuser.rol = rol
         miuser.save()
-    return render_to_response('adminRegister.html',{user_types:'users'},context)
-
-def adminProfile(request,afDni):
-    context = RequestContext(request)
-    affiliate = Member.objects.get(dni=afDni)
-    if request.user.myuser.rol == "ABM":
-        return render_to_response('adminProfile.html',{'afiliado':affiliate}, context)
-    else:
-        return redirect('/')
+    return render(request, 'adminRegister.html',{user_types:'users'})

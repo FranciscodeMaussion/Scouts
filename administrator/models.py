@@ -7,7 +7,6 @@ from django.db import models
 # Create your models here.
 
 user_types = (
-    ("GUEST", "Invitado"),
     ("SUPERUSER", "Master"),
     ("ABM", "Administrador"),
     ("ACCOUNT", "Contador"),
@@ -18,3 +17,6 @@ class MyUser(models.Model):
                       choices=user_types,
                       default="GUEST")
     user = models.OneToOneField(User, unique=True)
+
+    def __str__(self):
+        return str(self.user)

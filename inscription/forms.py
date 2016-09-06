@@ -1,11 +1,13 @@
 from django import forms
 from django.forms import ModelForm
-from inscription.models import Member
+from inscription.models import Affiliate, Scout, Adult
 
-class Members(ModelForm):
-    tutors = forms.CharField(required=False)
-    pic = forms.FileField(required=False)
-    formation = forms.CharField(required=False)
+class ScoutForm(ModelForm):
     class Meta:
-        model = Member
-        fields = ('scout','name','lastname', 'sex','dni','birthday','phone','adress','tutor','section','stage','pic','email','formation')
+        model = Scout
+        fields = ('name', 'gender', 'dni', 'birthday', 'phone', 'adress', 'tutor', 'section', 'stage', 'picture', 'email')
+
+class AdultForm(ModelForm):
+    class Meta:
+        model = Adult
+        fields = ('name', 'gender', 'dni', 'birthday', 'phone', 'adress', 'formation', 'email')

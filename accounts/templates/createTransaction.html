@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+Create Movement
+{% endblock %}
+{% block content %}
+<div class="top-content">
+  <div class="inner-bg">
+    <div class="container">
+      <div class="row" style="margin-top:80;">
+        <div class="col-sm-6 col-sm-offset-3">
+          <div class="form-box">
+            <div class="form-top">
+              <div class="form-top-left">
+                <h3>Crear Transaccion:</h3>
+              </div>
+            </div>
+          </div>
+          <div class="form-bottom">
+            <form role="form" action="{% url 'accounts:createTransaction' %}" method="post" class="registration-form" id="mov">
+              {% csrf_token %}
+              <div class="form-group">
+                <label class="sr-only" for="name">Nombre</label>
+                <input type="text" name="name" placeholder="Nombre" class="form-first-name form-control" id="nombre">
+              </div>
+              <div class="form-group">
+                <label class="sr-only" for="descripcion">Descripcion</label>
+                <input type="text" name="descripcion" placeholder="Descripcion" class="form-last-name form-control" id="descripcion">
+              </div>
+              <div class="row">
+                <div class='col-sm-6'>
+                  <div class="form-group">
+                    <div class='input-group date' id='fecha_mov'>
+                      <input type='text' class="form-control" placeholder="Inicio" name="date"/>
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-3">
+                  <div class="form-group">
+                    <select class="selectpicker" data-style="btn my-btn-gray" id="de" name="fromselect" data-live-search="true" title="Desde">
+                      {% for wallet in all_wallets %}
+                      <option value="{{a.id}}">{{wallet.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xs-offset-3 col-xs-3">
+                  <div class="form-group">
+                    <select class="selectpicker" data-style="btn my-btn-gray" id="para" name="toselect" data-live-search="true" title="Hacia">
+                      {% for wallet in all_wallets %}
+                      <option value="{{a.id}}">{{wallet.name}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="sr-only" for="amount">Monto</label>
+                <input type="text" name="amount" placeholder="Monto" class="form-last-name form-control" id="form-last-name">
+              </div>
+
+              <button type="submit" class="btn" style="background-color: green;">Crear Transaccion</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirmacion" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Antes de continuar, verifique que todos los datos sean correctos.</h4>
+      </div>
+      <div class="modal-body">
+        <h6 id="helper_name"></h6>
+        <h6 id="helper_desc"></h6>
+        <h6 id="helper_fecha"></h6>
+        <h6 id="helper_de"></h6>
+        <h6 id="helper_a"></h6>
+        <h6 id="helper_monto"></h6>
+      </div>
+      <div class="modal-footer">
+        <form method="POST">
+          <button class="btn my-btn-green btn-danger" id="btn-delete" type="button" data-dismiss="modal" >Cancelar</button>
+          <button class="btn my-btn-green btn-primary" id="btn-save-mov" type="button">Aceptar</button>
+        </form>
+      </div><p>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+  {% endblock %}
+  {% block scripts %}
+  <script>
+  $("#mov").submit(function(evento, submit) {
+    if (!submit) evento.preventDefault();
+    var e = $( "#mov" ).serializeArray();
+    $("#helper_name").text(e[1].value);
+    $("#helper_desc").text(e[2].value);
+    $("#helper_fecha").text(e[3].value);
+    $("#helper_de").text(e[4].value);
+    $("#helper_a").text(e[5].value);
+    $("#helper_monto").text(e[6].value);
+    $("#confirmacion").modal('show');
+  });
+  $('#btn-save-mov').click(function(){
+    $('#mov').trigger('submit', [true]);
+  });
+  $(function () {
+    $('#fecha_mov').datetimepicker({format: 'YYYY-MM-DD HH:mm'});
+  });
+  </script>
+  {% endblock %}
