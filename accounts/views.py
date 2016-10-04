@@ -1,11 +1,13 @@
 from django.shortcuts import render_to_response, render, redirect
 from django.template import RequestContext
+from django.http import HttpResponse
+
 # User
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from administrator.models import MyUser
 # Forms
-from .forms import SaleForm, ItemForm
+from .forms import SaleForm, ItemForm, TransactionsForm
 # Accounts imports
 from accounts.models import Event, Budget, Items, AccountStatus, PersonalAccount, Transactions, Wallet, Sale
 from inscription.models import Affiliate
@@ -14,15 +16,28 @@ from inscription.models import Affiliate
 def create_transaction(request):
     context = RequestContext(request)
     a = Wallet.objects.all()
-    if request.method=='POST':
-        wallet_to_modify = Wallet.objects.get(id=request.POST['toselect'])
-        save_transaction(request.POST['name'],
-                         request.POST['descripcion'],
-                         request.POST['date'],
-                         request.POST['amount'],
-                         wallet_to_modify.id,
-                         wallet_to_modify.name,
-                        )
+    form = TransactionsForm()
+
+    if request.method == 'POST':
+        form = TransactionsForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            form = TransactionsForm()
+            return HttpResponse(status=200)
+        else:
+            print form
+            return HttpResponse(status=201)
+    else:
+        form = TransactionsForm()
+
+    """if request.method=='POST':
+        wallet_to_modify = Wallet.objects.get(id=int(request.POST['fromselect']))
+        transaction = Transactions()
+        transaction.name = request.POST['name']
+        transaction.descripcion = request.POST['descripcion']
+        transaction.amount = request.POST['amount']
+        transaction.destination = wallet_to_modify
+        transaction.save()"""
     return render(request, 'createTransaction.html',{'all_wallets':a})
 
 # Creacion del evento
@@ -34,7 +49,8 @@ def new_event(request):
         event.description = request.POST['description']
         event.start = request.POST['start']
         event.save()
-    return redirect('/') #futuro template eventos ver
+        return HttpResponse(status=200)
+    return render(request, 'events.html')
 
 # Creacion de venta
 def new_sale(request):
@@ -48,11 +64,14 @@ def new_sale(request):
         if form.is_valid():
             form.save()
             form = SaleForm()
+            return HttpResponse(status=200)
         else:
             print form
+            return HttpResponse(status=201)
     else:
         form = SaleForm()
     return render(request, 'createVenta.html',{'events':events, 'affiliates':affiliates, 'form':form})
+
 
 # Creacion del presupuesto
 def new_budget(request):
@@ -67,6 +86,25 @@ def new_budget(request):
         return redirect('/cuentas/crear_item/')
     return render(request, 'budget.html',{'events':ev})
 
+# Creacion del balance (cierre de cuenta)
+
+def balances(request):
+    accounts = AccountStatus.objects.all()
+    if request.method=='POST':
+        cuenta = request.POST['balances']
+        account = AccountStatus.objects.get(id = int(cuenta))
+        if account.close != None:
+            mensaje = "La cuenta ya estaba cerrada"
+        else:
+            mensaje = "Se ha cerrado la cuenta"
+        total_transactions = account.get_account_balance()
+        positive_transactions = account.get_armado_de_balances_positivos()
+        negative_transactions = account.get_armado_de_balances_negativos()
+        total_positivo = account.get_total_de_balances_positivos()
+        total_negativo = account.get_total_de_balances_negativos()
+        return render(request,'transacciones.html',{'total_transactions':total_transactions,'positive_transactions':positive_transactions,      'negative_transactions':negative_transactions,'total_positivo':total_positivo,'total_negativo':total_negativo,'mensaje':mensaje})
+    return render(request, 'balances.html',{'accounts':accounts})
+
 # Creacion del item
 def addItem(request):
     context = RequestContext(request)
@@ -76,6 +114,8 @@ def addItem(request):
         if form.is_valid():
             print "valid"
             form.save()
+            return HttpResponse(status=200)
+        return HttpResponse(status=201)
     else:
         print "invalid"
         form = ItemForm()
@@ -90,23 +130,6 @@ def get_wallet(wallet_id, wallet_name):
     except Wallet.DoesNotExist:
         return "No se encontro ninguna cuenta con ese nombre y id"
 
-def save_transaction(name, description, day, amount, destination, destination_name):
-    destination_wallet = get_wallet(destination, destination_name)
-    if destination_wallet != None:
-        modified = modifyAccount(dest, destName, am, stat)
-        if modified:
-            moving_transaction = Transactions()
-            moving_transaction.name = name
-            moving_transaction.description = description
-            moving_transaction.date = day
-            moving_transaction.amount = amount
-            moving_transaction.destination = destination_wallet
-            moving_transaction.save()
-            return True
-        else:
-            return False
-    else:
-        return False
 
 def modify_account(wallet_id, wallet_name, amount):
     wallet_being_modified = getAccount(wallet_id, wallet_name)

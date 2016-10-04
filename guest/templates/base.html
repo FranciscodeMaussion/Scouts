@@ -59,21 +59,44 @@
           </li>
           {% if request.user.is_authenticated %}
           {% if request.user.myuser.rol == 'SUPERUSER' %}
-          <li>
-            <a class="page-scroll" href="{% url 'administrator:register' %}">Registrar</a>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" style="background-color:#222; color:white;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">USUARIOS<span class="caret"></span></a>
+            <ul class="dropdown-menu" style="background-color:#222; color:white;">
+              <li>
+                <a class="page-scroll" onclick="register()" href="#">Registrar</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a class="page-scroll" href="{% url 'administrator:admin_user_list' %}">Ver lista de usuarios </a>
+              </li>
+            </ul>
           </li>
           {% endif %}
           {% if request.user.myuser.rol == 'ACCOUNT' %}
-          <li>
-            <a class="page-scroll" onclick="confirmation()" href="#">Crear Evento</a>
-          </li>
-          <li>
-            <a class="page-scroll" href="{% url 'accounts:newVenta' %}">Crear Venta</a>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" style="background-color:#222; color:white;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Crear<span class="caret"></span></a>
+            <ul class="dropdown-menu" style="background-color:#222; color:white;">
+              <li>
+                <a class="page-scroll" onclick="confirmation()" href="#">Crear Evento</a>
+              </li>
+              <li>
+                <a class="page-scroll" onclick="add_item()" href="#">Agregar Item</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a class="page-scroll" onclick="crearVenta()" href="#">Crear Venta</a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a class="page-scroll" onclick="createTransaction()" href="#">Crear Transaccion</a>
+              </li>
+            </ul>
           </li>
           {% endif %}
+
           {% if request.user.myuser.rol == 'ABM' %}
           <li>
-            <a class="page-scroll" href="{% url 'inscription:addAfiliado' %}">Nuevo afiliado</a>
+            <a class="page-scroll" onclick="addAfiliado()" href="#">Nuevo afiliado</a>
           </li>
           {% endif %}
           <li>
@@ -93,7 +116,13 @@
 
   {% block content %}
   {% endblock %}
-  {% include "events.html" %}
+  <div class="modal fade" id="modal" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" id="modal-content">
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 </body>
 <!-- jQuery -->
 <script src="{% static 'js/jquery.js' %}"></script>
@@ -126,15 +155,54 @@
 <script src="{% static 'js/bootstrap-select.min.js' %}"></script>
 
 <script type="text/javascript">
+function send_server(url){
+  $.ajax({
+    type: "GET",
+    url: url,
+    success:function(result) {
+      $("#modal-content").html(result);
+    },
+    error:function(result) {
+      console.log(result);
+    }
+  });
+}
+
+function addAfiliado(){
+  var url = "{% url 'inscription:addAfiliado' %}";
+  send_server(url);
+  $("#modal").modal('show');
+}
 function confirmation(){
-  $("#create_event").modal('show');
+  var url = "{% url 'accounts:newEvent' %}";
+  send_server(url);
+  $("#modal").modal('show');
 }
-$(function () {
-  $('#datetimepicker1').datetimepicker({format: 'YYYY-MM-DD'});
-});
-function send_event(){
-  $("#event_form").submit();
+function crearVenta(){
+  var url = "{% url 'accounts:newVenta' %}";
+  send_server(url);
+  $("#modal").modal('show');
 }
+
+function createTransaction(){
+  var url = "{% url 'accounts:createTransaction' %}" ;
+  send_server(url);
+  $("#modal").modal('show');
+}
+
+
+function add_item(){
+  url = "{% url 'accounts:addItem' %}";
+  send_server(url);
+  $("#modal").modal('show');
+}
+
+function register(){
+  url = "{% url 'administrator:register' %}";
+  send_server(url);
+  $("#modal").modal('show');
+}
+
 </script>
 {% block scripts %}
 {% endblock %}

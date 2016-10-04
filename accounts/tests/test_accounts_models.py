@@ -1,6 +1,6 @@
 from django.test import TestCase
 from accounts.models import Event, Wallet, AccountStatus, Transactions, Sale, PersonalAccount
-from inscription.models import Affiliate
+from inscription.models import Affiliate, Scout
 from datetime import date
 
 
@@ -11,7 +11,7 @@ class AccountTestCase(TestCase):
         self.cantidad_de_wallets = Wallet.objects.count()
         self.cantidad_de_transactions = Transactions.objects.count()
         self.new_event = Event.objects.create(name='nombre_del_evento',description='descripcion_del_evento',start=self.now)
-        self.new_affiliate = Affiliate.objects.create(name='nombre_del_afiliado', dni=12233424, birthday=self.now, phone=123123123, adress='la_direccion', email='el_email')
+        self.new_affiliate = Scout.objects.create(name='nombre_del_afiliado', dni=122334254, birthday=self.now, phone=123123123, adress='la_direccion', email='el_email@exp.com')
         self.new_account = AccountStatus.objects.last()
         self.new_wallet = Wallet.objects.last()
         last_personal_accounts = PersonalAccount.objects.last()
@@ -66,3 +66,20 @@ class AccountTestCase(TestCase):
         wallet_ammount = self.new_wallet.amount
         new_transaction = Transactions.objects.create(destination=self.new_wallet, description="Venta locrito", date=self.now, amount=1000)
         self.assertEqual(self.new_wallet.amount, new_transaction.amount + wallet_ammount)
+
+    def test_merge_two_accounts(self):
+        new_account = AccountStatus.objects.create(name='nombre_de_la_cuenta_padre_test_merge',start=date.today())
+        second_account = AccountStatus.objects.create(name='nombre_de_la_cuenta_test_merge',start=date.today())
+        first_transaction = Transactions.objects.create(destination=new_account.wallet, description="Primera transaccion", date=date.today(), amount=1000)
+        second_transaction = Transactions.objects.create(destination=new_account.wallet, description="Segunda transaccion", date=date.today(), amount=-500)
+        self.assertFalse(new_account.merge_account(second_account))
+        account_closed = new_account.close_account()
+        ammount_moved = new_account.get_account_balance()
+        self.assertTrue(account_closed)
+        merge_accounts = new_account.merge_account(second_account)
+        last_transaction = Transactions.objects.last()
+        ignored_transaction = Transactions.objects.get(name = "Uniendo Cuentas " + str(new_account.id))
+        self.assertIsNotNone(ignored_transaction)
+        self.assertTrue(merge_accounts)
+        self.assertEqual(second_account.wallet.amount, ammount_moved)
+        self.assertEqual(new_account.get_account_balance(), ammount_moved)

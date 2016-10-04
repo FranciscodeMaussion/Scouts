@@ -19,22 +19,88 @@ class AccountStatus(models.Model):
     close = models.DateField(u"Dia de cierre del estado de cuenta", null=True, blank=True)
     wallet = models.OneToOneField('Wallet')
 
+    #Balances Positivos
+    def get_armado_de_balances_positivos(self):
+        if self.close != None:
+            positive_transactions = Transactions.objects.filter(destination=self.wallet, amount__gte = 0.00)
+            return positive_transactions
+
+    #Balances Negativos
+    def get_armado_de_balances_negativos(self):
+        if self.close != None:
+            negative_transactions = Transactions.objects.filter(destination=self.wallet, amount__lte = 0.00)
+            return negative_transactions
+
+    #Suma Balances Positivos
+    def get_total_de_balances_positivos(self):
+        if self.close != None:
+            all_transactions = Transactions.objects.filter(destination=self.wallet)
+            total_positivo = 0
+            for transaction in all_transactions:
+                if transaction.amount > 0.00:
+                    total_positivo += transaction.amount
+            return total_positivo
+
+    #Suma Balances Negativos
+    def get_total_de_balances_negativos(self):
+        if self.close != None:
+            all_transactions = Transactions.objects.filter(destination=self.wallet)
+            total_negativo = 0
+            for transaction in all_transactions:
+                if transaction.amount < 0.00:
+                    total_negativo += transaction.amount
+            return total_negativo
 
     def __str__(self):
         return self.name
 
+    #Cerrar Cuenta
     def close_account(self):
         self.close = date.today()
         self.save()
         return True
 
+    #Armar balance
     def get_account_balance(self):
         if self.close != None:
-            account_transactions = Transactions.objects.filter(destination=self.wallet)
+            positive_transactions = self.get_total_de_balances_positivos()
+            negative_transactions = self.get_total_de_balances_negativos()
+            account_balance = positive_transactions + negative_transactions
+            return account_balance
+            """"account_transactions = Transactions.objects.filter(destination=self.wallet)
             account_balance = 0
             for the_transaction in account_transactions:
-                account_balance += the_transaction.amount
+                if the_transaction.name != "Uniendo Cuentas " + str(self.id):
+                    account_balance += the_transaction.amount"""
+
+        else:
+            self.close_account()
+            positive_transactions = self.get_total_de_balances_positivos()
+            negative_transactions = self.get_total_de_balances_negativos()
+            account_balance = positive_transactions + negative_transactions
+            """account_transactions = Transactions.objects.filter(destination=self.wallet)
+            account_balance = 0
+            for the_transaction in account_transactions:
+                if the_transaction.name != "Uniendo Cuentas " + str(self.id):
+                    account_balance += the_transaction.amount"""
             return account_balance
+
+    def merge_account(self, target_account):
+        if self.close != None:
+            amount_to_move = self.get_account_balance()
+            out_transaction = Transactions()
+            out_transaction.name = "Uniendo Cuentas " + str(self.id)
+            out_transaction.description = "Toda la plata de la cuenta " + self.name + " es descontada de ella para unirla con " + target_account.name
+            out_transaction.amount = - amount_to_move
+            out_transaction.destination = self.wallet
+            out_transaction.save()
+            entering_transaction = Transactions()
+            entering_transaction.name = "Uniendo Cuentas"
+            entering_transaction.description = "Toda la plata de la cuenta " + self.name + " es movida a la cuenta " + target_account.name + " para unir ambas."
+            entering_transaction.amount = amount_to_move
+            entering_transaction.destination = target_account.wallet
+            entering_transaction.save()
+            return True
         else:
             return False
 
@@ -58,7 +124,7 @@ class Transactions(models.Model):
     name = models.CharField(u'Nombre del movimiento', max_length=30)
     description = models.TextField(u'Descripcion del movimiento', max_length=150, blank=True)
     date = models.DateField(u"Dia que se efectuo el movimiento", auto_now_add=True)
-    amount = models.DecimalField(u'Monto del dinero en movimiento', editable=False, max_digits=9, decimal_places=2)
+    amount = models.DecimalField(u'Monto del dinero en movimiento', max_digits=9, decimal_places=2, default=0.00)
     destination = models.ForeignKey('Wallet')
 
     def __str__(self):
@@ -84,7 +150,7 @@ class Items(models.Model):
 
     name = models.CharField(u'Nombre del Item', max_length=30)
     description = models.TextField(u'Descripcion del item', max_length=150, blank=True)
-    cost = models.DecimalField(u'Costo del item', default=0, editable=False, max_digits=7, decimal_places=2)
+    cost = models.DecimalField(u'Costo del item', default=0, max_digits=7, decimal_places=2)
     presupuesto = models.ForeignKey('Budget')
     quantity = models.PositiveIntegerField(u'Cantidad de items que se usan', default=0)
 
@@ -104,15 +170,15 @@ class Budget(models.Model):
         return self.name
 
 
-    def aplicar_gasto_transaccion(budget_transaction):
-        account_status = AccountStatus.objects.get(name = budget_transaction.event.name + "_" + budget_transaction.event.start )
-        all_items = Item.objects.filter(budget =budget_transaccion.id)
+    def aplicar_gasto_transaccion(self):
+        account_status = AccountStatus.objects.get(name = self.event.name + "_" + self.event.start )
+        all_items = Item.objects.filter(budget = self.id)
         for item in all_items:
             suma_items = all_items.cost[item] * all_items.quantity[item]
             costo_total += suma_items
         transaction = Transactions()
         transaction.wallet = account_status.wallet
-        transaction.description = "Gastos del evento " + budget_transaction.event.name + " de " + budget_transaction.event.start
+        transaction.description = "Gastos del evento " + self.event.name + " de " + self.event.start
         transaction.amount = costo_total
         transaction.date = date.today()
         transaccion.save()
@@ -125,8 +191,8 @@ class Sale(models.Model):
         verbose_name_plural="Ventas"
 
     name = models.CharField(u'Nombre de la venta', max_length=50)
-    seller = models.OneToOneField('PersonalAccount')
-    event = models.OneToOneField('Event')
+    seller = models.ForeignKey('PersonalAccount')
+    event = models.ForeignKey('Event')
     transaction = models.OneToOneField('Transactions')
     amount = models.DecimalField(u'Monto de la venta', default=0.01, max_digits=7, decimal_places=2, validators=[MinValueValidator(0.01)])
     quantity = models.PositiveIntegerField(u'Cantidad de items que se vendieron', default=0)
@@ -156,6 +222,14 @@ def create_account_status_for_event(sender, instance, **kwargs):
     account.close = instance.close
     account.save()
 
+@receiver(post_save, sender=Event)
+def create_budget_for_event(sender, instance, **kwargs):
+    budget = Budget()
+    budget.name = "presupuesto_" + instance.name
+    budget.description = "Presupuesto para el evento " + instance.name
+    budget.event = instance
+    budget.save()
+
 @receiver(pre_save, sender=AccountStatus)
 def create_wallet_for_account_status(sender, instance, **kwargs):
     if instance._state.adding:
@@ -172,16 +246,17 @@ def create_transactions_for_sale(sender, instance, **kwargs):
     personal_account.amount += total
     transaction = Transactions()
     the_wallet = Wallet.objects.get(name = instance.event.name + "_" + str(instance.event.start) + "_wallet")
-    print the_wallet
+    transaction.name = name = instance.event.name  + "_wallet"
     transaction.destination = the_wallet
     transaction.description = instance.seller.name + " vendio " + str(instance.quantity) + " " + instance.name
     transaction.date = date.today()
     transaction.amount = total
     transaction.save()
-    print transaction
     instance.transaction = transaction
-    instance.seller.amount = instance.seller.amount + total
+    #instance.seller.amount = instance.seller.amount + total
 
 @receiver(post_save, sender=Transactions)
 def apply_transactions_amount_for_wallet(sender, instance, **kwargs):
-    instance.destination.amount += instance.amount
+    target_account = Wallet.objects.get(id=instance.destination.id)
+    target_account.amount += int(instance.amount)
+    target_account.save()

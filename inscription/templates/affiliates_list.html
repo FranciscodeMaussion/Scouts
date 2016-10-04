@@ -1,0 +1,51 @@
+<!--
+Tabla con Todos los nombres, rol (adulto o beneficiario),
+-->
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}
+Afiliados
+{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/filterable.css' %}">
+{% endblock %}
+{% block content %}
+<section id="lista">
+  <div class="container">
+    <div class="row">
+      <div class="panel panel-primary filterable" style="border-color: gray;">
+        <div class="panel-heading" style="background-color: gray; border-color: gray;">
+          <h3 class="panel-title">Afiliados</h3>
+          <span class="pull-right btn btn-default btn-xs btn-filter glyphicon glyphicon-filter"></span>
+        </div>
+        <table class="table">
+          <thead>
+            <tr class="filters">
+              <th><input type="text" class="form-control" placeholder="Nombre" disabled></th>
+              <th><input type="text" class="form-control" placeholder="DNI" disabled></th>
+              <th><input type="text" class="form-control" placeholder="Tipo de Afiliado" disabled></th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for a in afiliados %}
+              <tr>
+                  <td>{{a.name}} {{a.lastname}}</td>
+                  <td>{{a.dni}}</td>
+                  <td>{% if a.scout %}Scout{% else %}Adulto{% endif %} <a href="
+                    {% if request.user.is_authenticated %}
+                      {% if request.user.myuser.rol == 'ABM' %}
+                        {% url 'inscription:profile' a.dni %}
+                      {% endif %}
+                    {% endif %}"><span class="glyphicon glyphicon-eye-open" style="float:right;"></span></a></td>
+              </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/filterable.js' %}"></script>
+{% endblock %}

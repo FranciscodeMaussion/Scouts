@@ -23,6 +23,7 @@ Eventos
             <div class="info">
               <h2 class="title">{{event.name}}</h2>
               <p class="desc">{{event.description}}</p>
+              <a class="link" onClick="modal_pre('{% url 'guest:view_presupuesto_evento' event.id %}')">Ver Presupuesto</a>
             </div>
           </li>
           {% endfor %}
@@ -31,4 +32,33 @@ Eventos
     </div>
   </div>
 </section>
+<div id="modal_presupuesto_evento" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" aria-hidden="true">
+</div>
 {% endblock %}
+{% block scripts %}
+
+ <script type="text/javascript">
+
+ function modal_pre(url){
+   var data = {
+       csrfmiddlewaretoken: '{{ csrf_token }}',
+   }
+   $.ajax({
+       type: "GET",
+       url: url,
+       data:data,
+       success: function(result){
+         $('#modal_presupuesto_evento').html(result);
+         $("#modal_presupuesto_evento").modal('show');
+       },
+       error: function(){
+           alert("error");
+       }
+   });
+
+ }
+
+
+
+ </script>
+ {% endblock %}

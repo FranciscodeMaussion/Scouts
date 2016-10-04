@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from accounts.models import Sale, Items
+from accounts.models import Sale, Items, Transactions
 
 
 class SaleForm(ModelForm):
@@ -11,4 +11,9 @@ class SaleForm(ModelForm):
 class ItemForm(ModelForm):
     class Meta:
         model = Items
-        fields = ('name', 'description', 'presupuesto', 'quantity',)
+        fields = ('name', 'description', 'cost', 'presupuesto', 'quantity')
+
+class TransactionsForm(ModelForm):
+    class Meta:
+        model = Transactions
+        fields = ('name', 'description', 'destination', 'amount')

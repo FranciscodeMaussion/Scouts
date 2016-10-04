@@ -1,0 +1,32 @@
+<div class="modal-dialog">
+  <!-- Modal content-->
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4 class="modal-title">Usuario: {{user.user.username}}</h4>
+    </div>
+    <div class="modal-body">
+      <form role="form" method="post" class="registration-form" id="mod_user_form">
+        {% csrf_token %}
+        <div class="form-group">
+          <select class="selectpicker" data-style="btn my-btn-gray" name="rolselect" data-width="100%">
+            <option value="SUPERUSER">Master</option>
+            <option value="ABM">Administrador</option>
+            <option value="ACCOUNT">Contador</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="sr-only" for="username">Usuario</label>
+          <input type="text" name="usr" placeholder="Username" value="{{user.user.username}}" class="form-first-name form-control" id="form-first-name">
+        </div>
+        <div class="form-group">
+          <label class="sr-only" for="password">Contraseña</label>
+          <input type="password" name="pass" placeholder="Password" class="form-last-name form-control" id="form-last-name">
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" onclick="send_user_mod('{% url 'administrator:the_user' user.id %}')">Cambiar</button>
+    </div>
+  </div>
+</div>

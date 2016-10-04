@@ -11,8 +11,8 @@ from accounts.models import PersonalAccount
 # Hacerlo unico al evento y account status (name)
 class Sections(models.Model):
     class Meta:
-        verbose_name="Etapa Etaria"
-        verbose_name_plural="Etapas Etarias"
+        verbose_name="Rango"
+        verbose_name_plural="Rangos"
 
     name = models.CharField(u'Name', max_length=10)
     def __str__(self):
@@ -20,8 +20,8 @@ class Sections(models.Model):
 
 class Stages(models.Model):
     class Meta:
-        verbose_name="Rango"
-        verbose_name_plural="Rangos"
+        verbose_name="Etapa Etaria"
+        verbose_name_plural="Etapa Etarias"
 
     name = models.CharField(u'Name', max_length=15)
     def __str__(self):

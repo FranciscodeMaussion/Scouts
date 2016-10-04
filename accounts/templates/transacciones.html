@@ -1,0 +1,41 @@
+<a>Estado de la cuenta:</a>
+{{mensaje}}
+<br>
+<a>Transacciones Positivas</a>
+{% for positive_transaction in positive_transactions %}
+
+<div>
+    <div class="row ">
+        <div>
+            {{positive_transaction.description}}
+        </div>
+        <div>
+            {{positive_transaction.amount}}
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+<a>TOTAL POSITIVO</a>
+{{total_positivo}}
+<br>
+<a>Transacciones Negativas</a>
+{% for negative_transaction in negative_transactions %}
+
+    <div class="row ">
+        <div>
+            {{negative_transaction.description}}
+        </div>
+        <div>
+            {{negative_transaction.amount}}
+        </div>
+    </div>
+
+{% endfor %}
+<a>TOTAL NEGATIVO</a>
+{{total_negativo}}
+<br>
+<br>
+<br>
+<a>TOTAL</a>
+{{total_transactions}}

@@ -22,8 +22,10 @@ Scouts Argentina
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6 col-sm-12 portfolio-item">
-                <a href="{% url 'guest:affiliates' %}" class="portfolio-link" data-toggle="modal">
+          {% if request.user.is_authenticated %}
+            {% if request.user.myuser.rol == 'ABM' %}
+            <div class="col-md-4 col-sm-12 portfolio-item">
+                <a href="{% url 'inscription:affiliates' %}" class="portfolio-link" data-toggle="modal">
                     <div class="portfolio-hover">
                         <div class="portfolio-hover-content">
                             <i class="fa fa-plus fa-3x"></i>
@@ -35,7 +37,18 @@ Scouts Argentina
                     <h4>Afiliados</h4>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-12 portfolio-item">
+            {% endif %}
+          {% endif %}
+            <div class="
+            {% if request.user.is_authenticated %}
+              {% if request.user.myuser.rol == 'ABM' %}
+              col-md-4
+              {% else %}
+              col-md-6
+              {% endif %}
+              {% else %}
+              col-md-6
+            {% endif %} col-sm-12 portfolio-item">
                 <a href="{% url 'guest:eventos' %}" class="portfolio-link" data-toggle="modal">
                     <div class="portfolio-hover">
                         <div class="portfolio-hover-content">
@@ -46,6 +59,28 @@ Scouts Argentina
                 </a>
                 <div class="portfolio-caption">
                     <h4>Eventos</h4>
+                </div>
+            </div>
+            <div class="
+            {% if request.user.is_authenticated %}
+              {% if request.user.myuser.rol == 'ABM' %}
+              col-md-4
+              {% else %}
+              col-md-6
+              {% endif %}
+              {% else %}
+              col-md-6
+            {% endif %} col-sm-12 portfolio-item">
+                <a href="{% url 'guest:transaccion' %}" class="portfolio-link" data-toggle="modal">
+                    <div class="portfolio-hover">
+                        <div class="portfolio-hover-content">
+                            <i class="fa fa-plus fa-3x"></i>
+                        </div>
+                    </div>
+                    <img src="{% static 'img/portfolio/money.jpg' %}" class="img-responsive" alt="" >
+                </a>
+                <div class="portfolio-caption">
+                    <h4>Transacción</h4>
                 </div>
             </div>
         </div>

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+Lista de Usuarios
+{% endblock %}
+{% block content %}
+<section id="sect_list">
+  {% include 'sectionAdminUser.html' %}
+</section>
+<div id="mod_register" class="modal fade" role="dialog">
+
+</div>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+toastr.options = {
+  "closeButton": true,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-bottom-right",
+  "preventDuplicates": true,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
+function mod_user(url, rol){
+  var data = {
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+  }
+  $.ajax({
+      type: "GET",
+      url: url,
+      data:data,
+      success: function(result){
+        $('#mod_register').html(result);
+        $("#mod_register").modal('show');
+        $('.selectpicker').selectpicker('render');
+        console.log(rol);
+        $('.selectpicker').val(rol).prop('selected', true);
+        $('.selectpicker').selectpicker('refresh');
+      },
+      error: function(){
+          alert("error");
+      }
+  });
+
+}
+function send_user_mod(url){
+  var data = $( '#mod_user_form' ).serialize();
+  $.ajax({
+      type: "POST",
+      url: url,
+      data:data,
+      success: function(result){
+        $('#sect_list').html(result);
+        $("#mod_register").modal('hide');
+        toastr["success"]("Usuario modificado")
+      },
+      error: function(){
+          alert("error");
+      }
+  });
+}
+</script>
+{% endblock %}

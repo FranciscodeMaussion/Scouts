@@ -8,7 +8,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 
 from inscription.models import Affiliate
-from accounts.models import Event
+from accounts.models import Event, Budget, Items, Transactions
 
 # Admin = django User. Scout leader:
 
@@ -54,21 +54,25 @@ def register_for_the_admin(request):
         new_user.save()
     return render(request, 'adminRegister.html')
 
-# Lista de afiliados para mostrar tabla completa
-def affiliates_list(request):
-    context = RequestContext(request)
-    affiliate = Affiliate.objects.all()
-    return render(request, 'affiliates_list.html',{'afiliados':affiliate})
-
-# Perfil de afiliados
-def affiliate_profile(request,afDni):
-    context = RequestContext(request)
-    affiliate = Affiliate.objects.get(dni=afDni)
-    return render(request, 'profile.html',{'afiliado':affiliate})
-
-
 #Template Eventos
 def view_events(request):
     context = RequestContext(request)
     event = Event.objects.all()
     return render(request, 'template_eventos.html',{'events':event})
+
+#Template Presupuesto
+def view_presupuesto_evento(request, idEvento):
+    items = Items.objects.filter(presupuesto__event = idEvento)
+    presupuesto = Budget.objects.get(event = idEvento)
+    return render(request, 'template_presupuesto_evento.html',{'presupuesto':presupuesto,'items':items})
+
+#Template Transaccion
+#def view_transaccion(request):
+    #context = RequestContext(request)
+    #transaccion = Transaccion.objects.all()
+    #return render(request, 'transaccion.html'#,{'transaccion':transaccion})
+
+def view_transaccion(request):
+    context = RequestContext(request)
+    transaccion = Transactions.objects.all()
+    return render(request, 'transaccion.html',{'transaccion':transaccion})
