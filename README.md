@@ -10,3 +10,15 @@ Esta es la rama de producción de nuestro git-flow.
 - ` python manage.py makemigrations accounts administrator inscription `
 - ` python manage.py migrate `
 - ` python manage.py runserver `
+
+## About:
+El proyecto se hizo a pedido de un grupo Scout, como parte de el plan de estudio del ITS Villada.
+Los autores somos:
+  - Mateo Bossio
+  - Francisco de Maussion
+  - Rodrigo Ibarra
+  - Rodrigo Toledo
+  - Dalmiro Vilca
+
+## Info:
+https://github.com/Scouts-Software/Scouts/wiki
